@@ -7,7 +7,7 @@ env:
 services:
   - docker
 
-before_install:
+script:
     - docker build -t $REPO/$COMMIT api_server
 
 after_success:
