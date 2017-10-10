@@ -3,15 +3,16 @@ env:
   global:
     - COMMIT=${TRAVIS_COMMIT::8}
     - REPO=legco-api-server
+    - ORG=g0vhk
 
 services:
   - docker
 
 script:
-    - docker build -t $REPO:$COMMIT api_server
+    - docker build -t $ORG/$REPO:$COMMIT api_server
 
 after_success:
     - export TAG='latest'
-    - docker tag $REPO:$COMMIT $REPO:$TAG
+    - docker tag $ORG/$REPO:$COMMIT $ORG/$REPO:$TAG
     - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-    - docker push $REPO
+    - docker push $ORG/$REPO
