@@ -1,0 +1,17 @@
+sudo: required
+env:
+  global:
+    - COMMIT=${TRAVIS_COMMIT::8}
+    - REPO=legco-api-server
+
+services:
+  - docker
+
+before_install:
+    - docker build -t $REPO/$COMMIT api_server
+
+after_success:
+    - export TAG='latest'
+    - docker tag $REPO:$COMMIT $REPO:$TAG
+    - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+    - docker push $REPO
