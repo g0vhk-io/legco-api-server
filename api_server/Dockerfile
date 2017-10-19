@@ -1,7 +1,16 @@
 FROM python:3
 RUN mkdir /app
+RUN mkdir /app/static
 WORKDIR /app
 ADD requirements.txt /app
 RUN pip install -r requirements.txt
 ADD . /app
-CMD python3 manage.py runserver 0.0.0.0:8080
+ARG MYSQL_USER
+ARG MYSQL_PASSWORD
+ARG MYSQL_HOST
+ARG MYSQL_DATABASE
+ENV MYSQL_USER="$MYSQL_USER"
+ENV MYSQL_PASSWORD="$MYSQL_PASSWORD"
+ENV MYSQL_HOST="$MYSQL_HOST"
+ENV MYSQL_DATABASE="$MYSQL_DATABASE"
+CMD ./run.sh

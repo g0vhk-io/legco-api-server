@@ -74,10 +74,19 @@ WSGI_APPLICATION = 'api_server.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+print(os.getenv('MYSQL_DATABASE'))
+print(os.getenv('MYSQL_USER'))
+print(os.getenv('MYSQL_PASSWORD'))
+print(os.getenv('MYSQL_HOST'))
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql', 
+        'NAME': os.getenv('MYSQL_DATABASE'),
+        'USER': os.getenv('MYSQL_USER'),
+        'PASSWORD': os.getenv('MYSQL_PASSWORD'),
+        'HOST': os.getenv('MYSQL_HOST'),
+        'PORT': '3306'
     }
 }
 
@@ -119,3 +128,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/app/static/'
