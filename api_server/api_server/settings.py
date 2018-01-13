@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '-&y5wi0os!a$+oh6dp#=!2(y5rl3r=p*86k7io^8nevmc&3o4^'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'legco',
+    'haystack'
 ]
 
 MIDDLEWARE = [
@@ -52,10 +54,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'api_server.urls'
 
+
+print(os.path.join(BASE_DIR, 'templates'))
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -88,6 +92,14 @@ DATABASES = {
         'HOST': os.getenv('MYSQL_HOST'),
         'PORT': '3306'
     }
+}
+
+
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'URL': os.getenv('SOLR_URL'),
+        'ENGINE': 'haystack.backends.solr_backend.SolrEngine'
+    }        
 }
 
 

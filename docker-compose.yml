@@ -10,6 +10,15 @@ services:
       - MYSQL_USER=docker
       - MYSQL_PASSWORD=docker
     command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+  solr:
+    build:
+      context: ./solr
+    ports:
+    - "18983:8983"
+    entrypoint:
+    - docker-entrypoint.sh
+    - solr-precreate
+    - mycore
   web:
     build:
       context: ./api_server
@@ -18,7 +27,10 @@ services:
         - MYSQL_USER=docker
         - MYSQL_PASSWORD=docker
         - MYSQL_HOST=db
+        - SOLR_URL=http://solr:8983/solr
     ports:
-      - "8080:8080"
+      - "9000:8080"
     links:
       - db
+      - solr
+
