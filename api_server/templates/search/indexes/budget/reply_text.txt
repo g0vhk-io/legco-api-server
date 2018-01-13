@@ -1,0 +1,9 @@
+{{ object.year }}
+{{ object.bureau }}
+{{ object.head }}
+{{ object.sub_head }}
+{{ object.director }}
+{{ object.member }}
+{{ object.reply_serial_no}}
+{{ object.question}}
+{{ object.answer }}
