@@ -12,6 +12,12 @@ class PartySerializer(serializers.ModelSerializer):
         model = Party
         fields = ('name_ch', 'name_en', 'id')
 
+class IndividualSerializer(serializers.ModelSerializer):
+    party = PartySerializer(many=False, read_only=True)
+    class Meta:
+        model = Party
+        fields = ('name_ch', 'name_en', 'id', 'image', 'party')
+
 class StatusView(APIView):
     renderer_classes = (JSONRenderer, )
     def post(self, request, format=None):
@@ -23,3 +29,12 @@ class PartyView(APIView):
         parties = Party.objects.all()
         serializer = PartySerializer(parties, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+class IndividualView(APIView):
+    renderer_classes = (JSONRenderer, )
+    def get(self, request, format=None):
+        individuals = Individual.objects.all()
+        serializer = IndividualSerializer(individuals, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+

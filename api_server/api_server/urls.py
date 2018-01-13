@@ -22,7 +22,8 @@ from django.conf.urls.static import static
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^status/', StatusView.as_view(), name='status'),
-    url(r'^party/', PartyView.as_view(), name='party')
+    url(r'^party/', PartyView.as_view(), name='party'),
+    url(r'^individual/', IndividualView.as_view(), name='individual')
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
