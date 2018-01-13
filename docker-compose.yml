@@ -9,6 +9,7 @@ services:
       - MYSQL_DATABASE=docker
       - MYSQL_USER=docker
       - MYSQL_PASSWORD=docker
+      - MYSQL_PORT=3306
     command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
   solr:
     build:
