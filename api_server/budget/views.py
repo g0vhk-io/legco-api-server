@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from rest_framework.response import Response
-from .models import Reply
+from .models import Reply, Meeting, Bureau
 from rest_framework.views import APIView
 from django.http import HttpResponse, JsonResponse
 from rest_framework.renderers import JSONRenderer
@@ -11,6 +11,11 @@ from django.shortcuts import get_object_or_404
 class ReplySerializer(serializers.ModelSerializer):
     class Meta:
         model = Reply
+        fields = '__all__'
+
+class BureauSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Bureau
         fields = '__all__'
 
 class RepliesView(APIView):
@@ -26,4 +31,24 @@ class RepliesView(APIView):
                 reply.question = reply.question[0:100]
                 reply.answer = reply.answer[0:100]
             serializer = ReplySerializer(replies, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+
+class MeetingSerializer(serializers.ModelSerializer):
+    bureau = BureauSerializer()
+    class Meta:
+        model = Meeting
+        fields = '__all__'
+
+class MeetingsView(APIView):
+    renderer_classes = (JSONRenderer, )
+
+    def get(self, request, year=None, format=None):
+        meetings = []
+        if year is not None:
+            meetings =  Meeting.objects.filter(year=int(year)).select_related()
+        else:
+            meetings = Meeting.objects.all().select_related()
+
+        serializer = MeetingSerializer(meetings, many=True)
         return JsonResponse(serializer.data, safe=False)
