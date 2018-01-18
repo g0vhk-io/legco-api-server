@@ -4,3 +4,4 @@ django-haystack==2.6.0
 wheel
 mysqlclient==1.3.12
 pysolr==3.7.0
+django-cors-headers==1.2.0

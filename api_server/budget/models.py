@@ -5,6 +5,15 @@ from django.contrib.auth.models import User
 class Keyword(models.Model):
     keyword = models.CharField(max_length=200, primary_key=True)
 
+class Bureau(models.Model):
+    bureau = models.CharField(max_length=256)
+    name_ch = models.CharField(max_length=256)
+    name_en = models.CharField(max_length=256)
+
+class Meeting(models.Model):
+    bureau = models.ForeignKey('Bureau', on_delete=models.CASCADE)
+    year = models.IntegerField()
+
 class Reply(models.Model):
     year = models.IntegerField()
     bureau = models.CharField(max_length=56)
