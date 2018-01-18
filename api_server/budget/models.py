@@ -10,9 +10,16 @@ class Bureau(models.Model):
     name_ch = models.CharField(max_length=256)
     name_en = models.CharField(max_length=256)
 
+    def __str__(self):
+        return self.bureau + "-" + self.name_ch
+
 class Meeting(models.Model):
     bureau = models.ForeignKey('Bureau', on_delete=models.CASCADE)
     year = models.IntegerField()
+
+    def __str__(self):
+        return str(self.year) + "-" + self.bureau.name_ch
+
 
 class Reply(models.Model):
     year = models.IntegerField()

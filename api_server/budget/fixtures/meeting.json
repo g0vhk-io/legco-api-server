@@ -1,0 +1,218 @@
+[
+{
+  "model": "budget.meeting",
+  "pk": 1,
+  "fields": {
+    "bureau": 1,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 2,
+  "fields": {
+    "bureau": 2,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 3,
+  "fields": {
+    "bureau": 3,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 4,
+  "fields": {
+    "bureau": 4,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 5,
+  "fields": {
+    "bureau": 5,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 6,
+  "fields": {
+    "bureau": 6,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 7,
+  "fields": {
+    "bureau": 7,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 8,
+  "fields": {
+    "bureau": 8,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 9,
+  "fields": {
+    "bureau": 9,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 10,
+  "fields": {
+    "bureau": 10,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 11,
+  "fields": {
+    "bureau": 11,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 12,
+  "fields": {
+    "bureau": 12,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 14,
+  "fields": {
+    "bureau": 13,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 15,
+  "fields": {
+    "bureau": 14,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 16,
+  "fields": {
+    "bureau": 15,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 17,
+  "fields": {
+    "bureau": 16,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 18,
+  "fields": {
+    "bureau": 17,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 19,
+  "fields": {
+    "bureau": 18,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 20,
+  "fields": {
+    "bureau": 19,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 21,
+  "fields": {
+    "bureau": 20,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 22,
+  "fields": {
+    "bureau": 21,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 23,
+  "fields": {
+    "bureau": 22,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 24,
+  "fields": {
+    "bureau": 23,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 25,
+  "fields": {
+    "bureau": 24,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 26,
+  "fields": {
+    "bureau": 25,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 27,
+  "fields": {
+    "bureau": 26,
+    "year": 2017
+  }
+},
+{
+  "model": "budget.meeting",
+  "pk": 28,
+  "fields": {
+    "bureau": 27,
+    "year": 2017
+  }
+}
+]

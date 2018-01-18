@@ -1,0 +1,245 @@
+[
+{
+  "model": "budget.bureau",
+  "pk": 1,
+  "fields": {
+    "bureau": "SB",
+    "name_ch": "\u4fdd\u5b89\u5c40",
+    "name_en": "Security"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 2,
+  "fields": {
+    "bureau": "DEVB(PL)",
+    "name_ch": "\u767c\u5c55\u5c40 (\u898f\u5283\u5730\u653f)",
+    "name_en": "Development (Planning and Lands)"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 3,
+  "fields": {
+    "bureau": "DEVB(W)",
+    "name_ch": "\u767c\u5c55\u5c40(\u5de5\u52d9)",
+    "name_en": "Development(Works)"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 4,
+  "fields": {
+    "bureau": "CSO",
+    "name_ch": "\u516c\u52d9\u54e1\u4e8b\u52d9\u5c40",
+    "name_en": "Civil Service"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 5,
+  "fields": {
+    "bureau": "JA",
+    "name_ch": "\u53f8\u6cd5\u6a5f\u69cb",
+    "name_en": "Judiciary"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 6,
+  "fields": {
+    "bureau": "SJ",
+    "name_ch": "\u5f8b\u653f\u53f8",
+    "name_en": "Justice"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 7,
+  "fields": {
+    "bureau": "CMAB",
+    "name_ch": "\u653f\u5236\u53ca\u5167\u5730\u4e8b\u52d9\u5c40",
+    "name_en": "Constitutional and Mainland Affairs"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 8,
+  "fields": {
+    "bureau": "FSTB(FS)",
+    "name_ch": "\u8ca1\u7d93\u4e8b\u52d9\u53ca\u5eab\u52d9\u5c40",
+    "name_en": "Financial Services and the Treasury"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 9,
+  "fields": {
+    "bureau": "FSTB(Tsy)",
+    "name_ch": "\u8ca1\u7d93\u4e8b\u52d9\u53ca\u5eab\u52d9\u5c40 (\u516c\u5171\u8ca1\u653f)",
+    "name_en": "Financial Services and the Treasury (Public Finance)"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 10,
+  "fields": {
+    "bureau": "ITB",
+    "name_ch": "\u5275\u65b0\u53ca\u79d1\u6280\u5c40",
+    "name_en": "Innovation and Technology"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 11,
+  "fields": {
+    "bureau": "CSO",
+    "name_ch": "\u884c\u653f\u7f72",
+    "name_en": "Administration"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 12,
+  "fields": {
+    "bureau": "AUD",
+    "name_ch": "\u5be9\u8a08\u7f72",
+    "name_en": "Audit"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 13,
+  "fields": {
+    "bureau": "CEO",
+    "name_ch": "\u884c\u653f\u9577\u5b98\u8fa6\u516c\u5ba4",
+    "name_en": "Chief Executive's Office"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 14,
+  "fields": {
+    "bureau": "ICAC",
+    "name_ch": "\u5ec9\u653f\u516c\u7f72",
+    "name_en": "Independent Commission Against Corruption"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 15,
+  "fields": {
+    "bureau": "LC",
+    "name_ch": "\u7acb\u6cd5\u6703\u79d8\u66f8\u8655",
+    "name_en": "Legislative Council Secretariat"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 16,
+  "fields": {
+    "bureau": "OMB",
+    "name_ch": "\u7533\u8a34\u5c08\u54e1\u516c\u7f72",
+    "name_en": "Ombudsman"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 17,
+  "fields": {
+    "bureau": "ENB",
+    "name_ch": "\u74b0\u5883\u5c40",
+    "name_en": "Environment"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 18,
+  "fields": {
+    "bureau": "THB(H)",
+    "name_ch": "\u904b\u8f38\u53ca\u623f\u5c4b\u5c40 (\u623f\u5c4b)",
+    "name_en": "Transport and Housing(Housing)"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 19,
+  "fields": {
+    "bureau": "THB(T)",
+    "name_ch": "\u904b\u8f38\u53ca\u623f\u5c4b\u5c40 (\u904b\u8f38)",
+    "name_en": "Transport and Housing (Transport)"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 20,
+  "fields": {
+    "bureau": "HAB",
+    "name_ch": "\u6c11\u653f\u4e8b\u52d9\u5c40",
+    "name_en": "Home Affairs"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 21,
+  "fields": {
+    "bureau": "CEDB(CCI)",
+    "name_ch": "\u5546\u52d9\u53ca\u7d93\u6fdf\u767c\u5c55\u5c40 (\u5de5\u5546\u53ca\u65c5\u904a\u696d)",
+    "name_en": "Commerce and Economic Development (Communications and Creative Industries)"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 22,
+  "fields": {
+    "bureau": "CEDB(CIT)",
+    "name_ch": "\u5546\u52d9\u53ca\u7d93\u6fdf\u767c\u5c55\u5c40 (\u901a\u8a0a\u53ca\u5275\u610f\u7522\u696d)",
+    "name_en": "Commerce and Economic Development (Communications and Creative Industries)"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 23,
+  "fields": {
+    "bureau": "FHB(FE)",
+    "name_ch": "\u98df\u7269\u53ca\u885e\u751f\u5c40 (\u98df\u7269\u5b89\u5168\u53ca\u74b0\u5883\u885e\u751f)",
+    "name_en": "Food and Health (Food Safety and Environmental Hygiene)"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 24,
+  "fields": {
+    "bureau": "FHB(H)",
+    "name_ch": "\u98df\u7269\u53ca\u885e\u751f\u5c40 (\u885e\u751f)",
+    "name_en": "Food and Health (Health)"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 25,
+  "fields": {
+    "bureau": "LWB(WW)",
+    "name_ch": "\u52de\u5de5\u53ca\u798f\u5229\u5c40 (\u798f\u5229\u53ca\u5a66\u5973\u4e8b\u52d9)",
+    "name_en": "Labour and Welfare (Welfare and Women)"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 26,
+  "fields": {
+    "bureau": "LWB(L)",
+    "name_ch": "\u52de\u5de5\u53ca\u798f\u5229\u5c40 (\u52de\u5de5)",
+    "name_en": "Labour and Welfare (Labour)"
+  }
+},
+{
+  "model": "budget.bureau",
+  "pk": 27,
+  "fields": {
+    "bureau": "EDB",
+    "name_ch": "\u6559\u80b2\u5c40",
+    "name_en": "Education"
+  }
+}
+]
