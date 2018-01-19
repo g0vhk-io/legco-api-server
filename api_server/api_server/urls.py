@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^status/', StatusView.as_view(), name='status'),
     url(r'^party/', PartyView.as_view(), name='party'),
     url(r'^individual/', IndividualView.as_view(), name='individual'),
+    url(r'^\.well-known/', include('letsencrypt.urls'))
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

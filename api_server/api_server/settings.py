@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'legco',
     'budget',
     'haystack',
-    'corsheaders'
+    'corsheaders',
+    'letsencrypt'
 ]
 
 MIDDLEWARE = [

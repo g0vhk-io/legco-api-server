@@ -3,7 +3,7 @@ RUN mkdir /app
 RUN mkdir /app/static
 WORKDIR /app
 ADD requirements.txt /app
-RUN pip install -r requirements.txt
+RUN pip install -U pip && pip install -r requirements.txt
 ADD . /app
 ARG MYSQL_USER
 ARG MYSQL_PASSWORD
