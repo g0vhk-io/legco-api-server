@@ -7,6 +7,7 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework import serializers
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
+from haystack.query import SearchQuerySet
 # Create your views here.
 
 class ReplySerializer(serializers.ModelSerializer):
@@ -21,31 +22,60 @@ class BureauSerializer(serializers.ModelSerializer):
 
 class RepliesView(APIView):
     renderer_classes = (JSONRenderer, )
-    def get(self, request, key=None, format=None):
+    def get(self, request, key=None, keyword=None, format=None):
         serializer = None
         if key is not None:
             reply = get_object_or_404(Reply, key=key)
             serializer = ReplySerializer(reply, many=False)
-        else:
-            replies = Reply.objects.all()
-            for reply in replies:
+        elif keyword is not None:
+            offset = int(request.GET.get('offset','0')) 
+            limit = int(request.GET.get('limit','10'))
+            result = SearchQuerySet().filter(content=keyword).models(Reply)
+            result = result[offset:(offset+limit)]
+            result = [r.object for r in result]
+            for reply in result:
                 reply.question = reply.question[0:100]
                 reply.answer = reply.answer[0:100]
-            serializer = ReplySerializer(replies, many=True)
+            serializer = ReplySerializer(result, many=True)
+        else:
+            serializer = ReplySerializer([], many=True)
         return JsonResponse(serializer.data, safe=False)
 
+
+class RepliesKeywordView(APIView):
+    renderer_classes = (JSONRenderer, )
+    def get(self, request, keyword=None, format=None):
+        result = []
+        total = 0
+        offset = int(request.GET.get('offset','0')) 
+        limit = int(request.GET.get('limit','10'))
+        if keyword is not None:
+            result = SearchQuerySet().filter(content=keyword).models(Reply)
+            result = result[offset:(offset+limit)]
+            result = [r.object for r in result]
+            for reply in result:
+                reply.question = reply.question[0:100]
+                reply.answer = reply.answer[0:100]
+        serializer = ReplySerializer(result, many=True)
+        return JsonResponse({'data': serializer.data, 'total': total , 'limit': limit, 'offset': offset}, safe=False)
 
 class RepliesYearBureauView(APIView):
     renderer_classes = (JSONRenderer, )
     def get(self, request, year=None, bureau=None, format=None):
         replies = []
+        total = 0
         if year is not None and bureau is not None:
+            offset = int(request.GET.get('offset','0')) 
+            limit = int(request.GET.get('limit','10'))
             replies = Reply.objects.filter(Q(year=int(year)) & Q(bureau=bureau))
+            total = replies.count()
+            replies = replies[offset:(offset + limit)]
+
         for reply in replies:
             reply.question = reply.question[0:100]
             reply.answer = reply.answer[0:100]
         serializer = ReplySerializer(replies, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        return JsonResponse({'data': serializer.data, 'total': total , 'limit': limit, 'offset': offset}, safe=False)
 
 
 

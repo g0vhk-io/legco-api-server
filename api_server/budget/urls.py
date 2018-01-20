@@ -7,4 +7,5 @@ urlpatterns = [
   url(r'^replies/$', RepliesView.as_view(), name='replies'),
   url(r'^replies/(?P<year>[0-9]+)/(?P<bureau>.+)/$', RepliesYearBureauView.as_view(), name='replies_year_bureau'),
   url(r'^replies/(?P<key>.+)/$', RepliesView.as_view(), name='reply'),
+  url(r'^search/(?P<keyword>.+)/$', RepliesKeywordView.as_view(), name='reply_by_keyword'),
 ]

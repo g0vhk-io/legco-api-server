@@ -87,6 +87,10 @@
     
     <field name="text" type="text_en" indexed="true" stored="true" multiValued="false" />
     
+    <field name="bureau" type="text_en" indexed="true" stored="true" multiValued="false" />
+    <field name="member" type="text_en" indexed="true" stored="true" multiValued="false" />
+    <field name="reply_serial_no" type="text_en" indexed="true" stored="true" multiValued="false" />
+    <field name="year" type="int" indexed="true" stored="true" multiValued="false" />
 
     <uniqueKey>id</uniqueKey>
 
