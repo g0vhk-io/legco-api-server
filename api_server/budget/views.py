@@ -51,6 +51,7 @@ class RepliesKeywordView(APIView):
         limit = int(request.GET.get('limit','10'))
         if keyword is not None:
             result = SearchQuerySet().filter(content=keyword).models(Reply)
+            total = result.count()
             result = result[offset:(offset+limit)]
             result = [r.object for r in result]
             for reply in result:
