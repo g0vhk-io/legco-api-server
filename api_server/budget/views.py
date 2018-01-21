@@ -8,6 +8,8 @@ from rest_framework import serializers
 from django.shortcuts import get_object_or_404
 from django.db.models import Q
 from haystack.query import SearchQuerySet
+from django.utils.html import strip_tags
+from django.template import loader
 # Create your views here.
 
 class ReplySerializer(serializers.ModelSerializer):
@@ -34,8 +36,8 @@ class RepliesView(APIView):
             result = result[offset:(offset+limit)]
             result = [r.object for r in result]
             for reply in result:
-                reply.question = reply.question[0:100]
-                reply.answer = reply.answer[0:100]
+                reply.question = strip_tags(reply.question)[0:100]
+                reply.answer = strip_tags(reply.answer)[0:100]
             serializer = ReplySerializer(result, many=True)
         else:
             serializer = ReplySerializer([], many=True)
@@ -55,8 +57,8 @@ class RepliesKeywordView(APIView):
             result = result[offset:(offset+limit)]
             result = [r.object for r in result]
             for reply in result:
-                reply.question = reply.question[0:100]
-                reply.answer = reply.answer[0:100]
+                reply.question = strip_tags(reply.question)[0:100]
+                reply.answer = strip_tags(reply.answer)[0:100]
         serializer = ReplySerializer(result, many=True)
         return JsonResponse({'data': serializer.data, 'total': total , 'limit': limit, 'offset': offset}, safe=False)
 
@@ -73,8 +75,8 @@ class RepliesYearBureauView(APIView):
             replies = replies[offset:(offset + limit)]
 
         for reply in replies:
-            reply.question = reply.question[0:100]
-            reply.answer = reply.answer[0:100]
+            reply.question = strip_tags(reply.question)[0:100]
+            reply.answer = strip_tags(reply.answer)[0:100]
         serializer = ReplySerializer(replies, many=True)
         return JsonResponse({'data': serializer.data, 'total': total , 'limit': limit, 'offset': offset}, safe=False)
 
@@ -98,3 +100,15 @@ class MeetingsView(APIView):
 
         serializer = MeetingSerializer(meetings, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+class SharerView(APIView):
+    def get(self, request, key=None):
+        reply = get_object_or_404(Reply, key=key)
+        template = loader.get_template('budget/sharer.html')
+        context = {
+          'url': 'http://budgetq.g0vhk.io/reply/' + key,
+          'title': str(reply.year) + '年開支預算問題/' + reply.head + '/' + reply.member,
+          'description': reply.member + ':' + strip_tags(reply.question)[0:100],
+          'image': 'http://budgetq.g0vhk.io/gov_bg.png'
+        }
+        return HttpResponse(template.render(context, request))

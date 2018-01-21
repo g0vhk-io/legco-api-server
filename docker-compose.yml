@@ -18,8 +18,7 @@ services:
     - "18983:8983"
     entrypoint:
     - docker-entrypoint.sh
-    - solr-precreate
-    - mycore
+    - solr-foreground
   web:
     build:
       context: ./api_server
@@ -34,4 +33,3 @@ services:
     links:
       - db
       - solr
-

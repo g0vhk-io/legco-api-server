@@ -39,5 +39,5 @@ class Reply(models.Model):
     question = models.TextField()
     answer =  models.TextField()
     keywords = models.ManyToManyField(Keyword)
-    def __unicode__(self):
-        return self.bureau + "-" + str(self.pk)
+    def __str__(self):
+        return str(self.pk) + "-" + self.member + "-" + self.head
