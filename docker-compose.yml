@@ -1,7 +1,7 @@
 version: '3'
 services:
   db:
-    image: mysql:5.7
+    image: mariadb:10.2.12
     ports:
       - "13306:3306"
     environment:

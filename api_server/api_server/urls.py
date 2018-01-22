@@ -20,7 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    url(r'budget/', include('budget.urls')),
+    url(r'^budget/', include('budget.urls')),
     url(r'^admin/', admin.site.urls),
     url(r'^status/', StatusView.as_view(), name='status'),
     url(r'^party/', PartyView.as_view(), name='party'),
