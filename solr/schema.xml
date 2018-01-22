@@ -81,14 +81,14 @@
     <field name="django_ct" type="string" indexed="true" stored="true" multiValued="false"/>
     <field name="django_id" type="string" indexed="true" stored="true" multiValued="false"/>
     
-    <field name="name_ch" type="text_en" indexed="true" stored="true" multiValued="false" />
+    <field name="name_ch" type="text_cjk" indexed="true" stored="true" multiValued="false" />
     
     <field name="name_en" type="text_en" indexed="true" stored="true" multiValued="false" />
     
-    <field name="text" type="text_en" indexed="true" stored="true" multiValued="false" />
+    <field name="text" type="text_cjk" indexed="true" stored="true" multiValued="false" />
     
     <field name="bureau" type="text_en" indexed="true" stored="true" multiValued="false" />
-    <field name="member" type="text_en" indexed="true" stored="true" multiValued="false" />
+    <field name="member" type="text_cjk" indexed="true" stored="true" multiValued="false" />
     <field name="reply_serial_no" type="text_en" indexed="true" stored="true" multiValued="false" />
     <field name="year" type="int" indexed="true" stored="true" multiValued="false" />
 

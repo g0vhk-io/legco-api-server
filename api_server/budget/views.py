@@ -29,16 +29,6 @@ class RepliesView(APIView):
         if key is not None:
             reply = get_object_or_404(Reply, key=key)
             serializer = ReplySerializer(reply, many=False)
-        elif keyword is not None:
-            offset = int(request.GET.get('offset','0')) 
-            limit = int(request.GET.get('limit','10'))
-            result = SearchQuerySet().filter(content=keyword).models(Reply)
-            result = result[offset:(offset+limit)]
-            result = [r.object for r in result]
-            for reply in result:
-                reply.question = strip_tags(reply.question)[0:100]
-                reply.answer = strip_tags(reply.answer)[0:100]
-            serializer = ReplySerializer(result, many=True)
         else:
             serializer = ReplySerializer([], many=True)
         return JsonResponse(serializer.data, safe=False)
@@ -52,9 +42,16 @@ class RepliesKeywordView(APIView):
         offset = int(request.GET.get('offset','0')) 
         limit = int(request.GET.get('limit','10'))
         if keyword is not None:
-            result = SearchQuerySet().filter(content=keyword).models(Reply)
+            words = keyword.split(' ')
+            result = SearchQuerySet()
+            for word in words:
+                result = result.filter(content__exact=word)
+            result = result.models(Reply)
             total = result.count()
             result = result[offset:(offset+limit)]
+            for r in result:
+                print(r.score)
+
             result = [r.object for r in result]
             for reply in result:
                 reply.question = strip_tags(reply.question)[0:100]
