@@ -67,7 +67,7 @@ class RepliesYearBureauView(APIView):
         if year is not None and bureau is not None:
             offset = int(request.GET.get('offset','0')) 
             limit = int(request.GET.get('limit','10'))
-            replies = Reply.objects.filter(Q(year=int(year)) & Q(bureau=bureau))
+            replies = Reply.objects.filter(Q(year=int(year)) & (Q(bureau=bureau) | Q(bureau="S-" + bureau) | Q(bureau="SV-")))
             total = replies.count()
             replies = replies[offset:(offset + limit)]
 
