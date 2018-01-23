@@ -15,8 +15,8 @@ class Command(BaseCommand):
         template = loader.get_template('budget/sitemap.xml')
         root = 'http://budget.g0vhk.io'
         locations = ['/']
-        locations += ['/reply/' + r.key for r in Reply.objects.all()]
-        meetings = ['/meeting/%s/%s' % (m.year, m.bureau.bureau) for m in Meeting.objects.all() ]
+        locations += [root + '/reply/' + r.key for r in Reply.objects.all()]
+        meetings = [root + '/meeting/%s/%s' % (m.year, m.bureau.bureau) for m in Meeting.objects.all() ]
         locations += meetings
         d = date.today().strftime('%Y-%m-%d')
         print(d)
