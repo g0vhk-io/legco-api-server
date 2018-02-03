@@ -40,10 +40,17 @@ INSTALLED_APPS = [
     'rest_framework',
     'legco',
     'budget',
+    'gov',
     'haystack',
     'corsheaders',
     'letsencrypt'
 ]
+
+REST_FRAMEWORK = {
+    'PAGINATE_BY': 10, 
+    'MAX_PAGINATE_BY': 100,
+    'PAGINATE_BY_PARAM': 'page_size'
+}
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
