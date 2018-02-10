@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'legco',
     'budget',
     'gov',
+    'news',
     'haystack',
     'corsheaders',
     'letsencrypt'
