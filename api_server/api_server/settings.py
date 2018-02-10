@@ -48,6 +48,7 @@ INSTALLED_APPS = [
 
 REST_FRAMEWORK = {
     'PAGINATE_BY': 10, 
+    'PAGE_SIZE': 20,
     'MAX_PAGINATE_BY': 100,
     'PAGINATE_BY_PARAM': 'page_size'
 }
