@@ -20,6 +20,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    url(r'^legco/', include('legco.urls')),
     url(r'^budget/', include('budget.urls')),
     url(r'^news/', include('news.urls')),
     url(r'^gov/', include('gov.urls')),
