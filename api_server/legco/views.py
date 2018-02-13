@@ -1,15 +1,41 @@
 from django.shortcuts import render
 from .models import *
+from django.db.models import Q
 from rest_framework.views import APIView
 from django.http import HttpResponse, JsonResponse
 from rest_framework.renderers import JSONRenderer
 from rest_framework import serializers
+from django.shortcuts import get_object_or_404
+from api_server.views import IndividualSerializer
 # Create your views here.
 
-class MeetingHansardSerializer(serializers.ModelSerializer):
+class MeetingPersonelSerializer(serializers.ModelSerializer):
+    individual = IndividualSerializer(read_only=True, many=False)
+    class Meta:
+        model = MeetingPersonel
+        fields = '__all__'
+
+class MeetingSpeechSerializer(serializers.ModelSerializer):
+    individual = IndividualSerializer(read_only=True, many=False)
+    others_individual = IndividualSerializer(read_only=True, many=True)
+    class Meta:
+        model = MeetingSpeech
+        fields = '__all__'
+
+class MeetingHansardSummarySerializer(serializers.ModelSerializer):
     class Meta:
         model = MeetingHansard
         fields = ['date', 'meeting_type', 'source_url', 'key', 'id']
+
+class MeetingHansardDetailSerializer(serializers.ModelSerializer):
+    members_present = MeetingPersonelSerializer(read_only=True, many=True)
+    members_absent = MeetingPersonelSerializer(read_only=True, many=True)
+    public_officers = MeetingPersonelSerializer(read_only=True, many=True)
+    clerks = MeetingPersonelSerializer(read_only=True, many=True)
+    speeches = MeetingSpeechSerializer(read_only=True, many=True)
+    class Meta:
+        model = MeetingHansard
+        fields = '__all__'
 
 
 
@@ -19,11 +45,22 @@ class MeetingHansardsView(APIView):
     def get(self, request, year=None, format=None):
         meetings = []
         if year is not None:
-            meetings =  MeetingHansard.objects.filter(date__year=int(year))
+            meetings =  MeetingHansard.objects.filter((Q(date__year=int(year)) & Q(date__month__gte=9)) | (Q(date__year=int(year) + 1) & Q(date__month__lt=9)))
         else:
-            meetings = MeetingHansard.objects.all().select_related()
+            meetings = MeetingHansard.objects.all()
+        meetings = meetings.order_by('-date')
 
-        serializer = MeetingHansardSerializer(meetings, many=True)
+        serializer = MeetingHansardSummarySerializer(meetings, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+class MeetingHansardView(APIView):
+    renderer_classes = (JSONRenderer, )
+
+    def get(self, request, key=None, format=None):
+        print(key)
+        meeting = get_object_or_404(MeetingHansard.objects.select_related(), id=int(key))
+
+        serializer = MeetingHansardDetailSerializer(meeting, many=False)
         return JsonResponse(serializer.data, safe=False)
 
 
