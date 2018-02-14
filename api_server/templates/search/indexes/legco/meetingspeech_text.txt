@@ -1,0 +1,2 @@
+{{ object.title_ch }}
+{{ object.text_ch }}

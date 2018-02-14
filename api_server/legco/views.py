@@ -7,6 +7,8 @@ from rest_framework.renderers import JSONRenderer
 from rest_framework import serializers
 from django.shortcuts import get_object_or_404
 from api_server.views import IndividualSerializer
+from haystack.query import SearchQuerySet
+from rest_framework.pagination import LimitOffsetPagination
 # Create your views here.
 
 class MeetingPersonelSerializer(serializers.ModelSerializer):
@@ -62,5 +64,23 @@ class MeetingHansardView(APIView):
 
         serializer = MeetingHansardDetailSerializer(meeting, many=False)
         return JsonResponse(serializer.data, safe=False)
+
+class MeetingSpeechSearchView(APIView):
+    renderer_classes = (JSONRenderer, )
+
+    def get(self, request, keyword=None, format=None):
+        if keyword is not None:
+            words = keyword.split(' ')
+            result = SearchQuerySet()
+            for word in words:
+                print(word)
+                result = result.filter(content__exact=word)
+            result = result.models(MeetingSpeech)
+            result = result.order_by('-year')
+        paginator = LimitOffsetPagination()
+        result = paginator.paginate_queryset(result, request)
+        result = [r.object for r in result]
+        serializer = MeetingSpeechSerializer(result, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 

@@ -105,7 +105,7 @@ class MeetingHansard(models.Model):
     meeting_type = models.CharField(max_length=128, default="cm")
     key = models.CharField(max_length=128, unique=True)
     source_url = models.CharField(max_length=2048)
-    speeches = models.ManyToManyField(MeetingSpeech)
+    speeches = models.ManyToManyField(MeetingSpeech, related_name='hansard')
     members_present = models.ManyToManyField(MeetingPersonel, related_name='present')
     members_absent = models.ManyToManyField(MeetingPersonel, related_name='absent')
     public_officers = models.ManyToManyField(MeetingPersonel, related_name='officers')
