@@ -12,6 +12,21 @@ from rest_framework.pagination import LimitOffsetPagination
 # Create your views here.
 
 
+class VoteSummarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VoteSummary
+        fields = '__all__'
+
+
+
+class IndividualVoteSerializer(serializers.ModelSerializer):
+    individual = IndividualSerializer(read_only=True, many=False)
+    class Meta:
+        model = IndividualVote
+        fields = '__all__'
+
+
+
 class MotionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Motion
@@ -126,4 +141,33 @@ class VoteSearchView(APIView):
         serializer = VoteSerializer(votes, many=True)
         return JsonResponse(serializer.data, safe=False)
 
-
+class VoteDetailView(APIView):
+    renderer_classes = (JSONRenderer, )
+    def get(self, request, key=None, format=None):
+        yes_count = 0
+        no_count = 0
+        present_count = 0
+        abstain_count = 0
+        absent_count = 0
+        overall_result = ""
+        key = int(key)
+        individual_votes = IndividualVote.objects.prefetch_related('individual').filter(vote__id = key)
+        vote = Vote.objects.prefetch_related('meeting').prefetch_related('motion').get(pk = key)
+        summaries = VoteSummary.objects.filter(vote__id = key)
+        total_count = individual_votes.count()
+        for summary in summaries:
+            yes_count += summary.yes_count
+            no_count  += summary.no_count
+            abstain_count += summary.abstain_count
+            present_count += summary.present_count
+            if summary.summary_type == VoteSummary.OVERALL:
+                overall_result = summary.result
+        absent_count = total_count - present_count
+        present_vote_count = present_count - yes_count - no_count - abstain_count
+        yes_individuals = [iv.individual for iv in individual_votes if iv.result == "YES"]
+        no_individuals = [iv.individual for iv in individual_votes if iv.result == "NO"]
+        other_individuals = [iv.individual for iv in individual_votes if iv.result not in ["YES", "NO"]]
+        serializer = IndividualVoteSerializer(individual_votes, many=True)
+        vote_serializer = VoteSerializer(vote, many=False)
+        vote_summary_serializer = VoteSummarySerializer(summaries, many=True)
+        return JsonResponse({'vote': vote_serializer.data, 'individual_votes': serializer.data, 'summaries': vote_summary_serializer.data, 'yes_count': yes_count, 'no_count': no_count, 'abstain_count': abstain_count, 'absent_count': absent_count, 'overall_result': overall_result, 'present_vote_count': present_vote_count, 'id': key}, safe=False)
