@@ -51,9 +51,24 @@ class MeetingHansardsView(APIView):
         else:
             meetings = MeetingHansard.objects.all()
         meetings = meetings.order_by('-date')
+        vote_counts = {}
+        present_counts = {}
+        absent_counts = {}
+        for m in meetings:
+            present = [p for p in m.members_present.all()]
+            absent =  [p for p in m.members_absent.all()]
+            votes = Vote.objects.prefetch_related('meeting').prefetch_related('motion').filter(Q(date__year = m.date.year) & Q(date__month = m.date.month) & Q(date__day = m.date.day))
+            vote_counts[m.id] = len(votes)
+            present_counts[m.id] = len(present)
+            absent_counts[m.id] = len(absent)
 
         serializer = MeetingHansardSummarySerializer(meetings, many=True)
-        return JsonResponse(serializer.data, safe=False)
+        output = serializer.data
+        for meeting in output:
+            meeting['vote_count'] = vote_counts[meeting['id']]
+            meeting['present_count'] = present_counts[meeting['id']]
+            meeting['absent_count'] = absent_counts[meeting['id']]
+        return JsonResponse(output, safe=False)
 
 class MeetingHansardView(APIView):
     renderer_classes = (JSONRenderer, )
