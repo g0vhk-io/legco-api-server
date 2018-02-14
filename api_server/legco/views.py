@@ -11,6 +11,19 @@ from haystack.query import SearchQuerySet
 from rest_framework.pagination import LimitOffsetPagination
 # Create your views here.
 
+
+class MotionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Motion
+        fields = '__all__'
+
+
+class VoteSerializer(serializers.ModelSerializer):
+    motion = MotionSerializer(read_only=True, many=False)
+    class Meta:
+        model = Vote
+        fields = '__all__'
+
 class MeetingPersonelSerializer(serializers.ModelSerializer):
     individual = IndividualSerializer(read_only=True, many=False)
     class Meta:
@@ -97,5 +110,15 @@ class MeetingSpeechSearchView(APIView):
         result = [r.object for r in result]
         serializer = MeetingSpeechSerializer(result, many=True)
         return paginator.get_paginated_response(serializer.data)
+
+class VoteSearchView(APIView):
+    renderer_classes = (JSONRenderer, )
+
+    def get(self, request, date=None, format=None):
+        year, month, day = [int(s) for s in date.split('-')]
+        print(year, month, day)
+        votes = Vote.objects.prefetch_related('meeting').prefetch_related('motion').filter(Q(date__year = year) & Q(date__month = month) & Q(date__day = day))
+        serializer = VoteSerializer(votes, many=True)
+        return JsonResponse(serializer.data, safe=False)
 
 
