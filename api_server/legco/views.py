@@ -113,11 +113,16 @@ class MeetingSpeechSearchView(APIView):
 
 class VoteSearchView(APIView):
     renderer_classes = (JSONRenderer, )
-
-    def get(self, request, date=None, format=None):
-        year, month, day = [int(s) for s in date.split('-')]
-        print(year, month, day)
-        votes = Vote.objects.prefetch_related('meeting').prefetch_related('motion').filter(Q(date__year = year) & Q(date__month = month) & Q(date__day = day))
+    def get(self, request, date=None, year=None, format=None):
+        votes = Vote.objects.prefetch_related('meeting').prefetch_related('motion')
+        if date is not None:
+            year, month, day = [int(s) for s in date.split('-')]
+            votes = votes.filter(Q(date__year = year) & Q(date__month = month) & Q(date__day = day))
+        elif year is not None:
+            year = int(year)
+            votes = votes.filter(date__year=year)
+        else:
+            votes = []
         serializer = VoteSerializer(votes, many=True)
         return JsonResponse(serializer.data, safe=False)
 
