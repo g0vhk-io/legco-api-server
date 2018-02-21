@@ -177,12 +177,11 @@ class VoteDetailView(APIView):
 
 class AbsentView(APIView):
     renderer_classes = (JSONRenderer, )
-    def get(self, request, from_year=None, to_year=None, format=None):
+    def get(self, request, format=None):
         size = int(request.query_params.get("size", 5))
         query = MeetingHansard.objects.all()
-        if from_year is not None:
-            from_year = int(from_year)
-        print(request.query_params)
+        from_year = None
+        to_year = None
         if "from" in request.query_params and "to" in request.query_params:
             from_year = int(request.query_params["from"])
             to_year = int(request.query_params["to"])
@@ -212,4 +211,36 @@ class AbsentView(APIView):
             if pk is None:
                 continue
             result.append({'id': pk, 'name': name_ch, 'total': dcount, 'image': image, 'max': meeting_total})
+        return JsonResponse(result[0:size], safe=False)
+
+class SpeakView(APIView):
+    renderer_classes = (JSONRenderer, )
+    def get(self, request, from_year=None, to_year=None, format=None):
+        size = int(request.query_params.get("size", 5))
+        today = date.today()
+        from_year = None
+        to_year = None
+        if "from" in request.query_params and "to" in request.query_params:
+            from_year = int(request.query_params["from"])
+            to_year = int(request.query_params["to"])
+            if from_year >= to_year:
+                from_year = None
+                to_year = None
+        if from_year is None:
+            from_year = int(today.year / 4) * 4
+        if to_year is None:
+            to_year = from_year + 4
+        condition = Q(pk__isnull=True)
+        for year in range(from_year, to_year):
+            condition = condition | (Q(hansard__date__gt=date(year, 9, 10)) & Q(hansard__date__lte=date(year + 1, 9, 9)))
+        query = MeetingSpeech.objects.filter(condition)
+        speech_total =  query.values('individual__pk', 'individual__name_ch', 'individual__image').annotate(dcount=Count('individual__pk')).order_by('-dcount')
+        result = []
+        m = max([d['dcount'] for d in speech_total])
+        for d in speech_total:
+            pk = d['individual__pk']
+            name_ch = d['individual__name_ch']
+            dcount = d['dcount']
+            image = d['individual__image']
+            result.append({'id': pk, 'name': name_ch, 'total': dcount, 'max': m, 'image': image})
         return JsonResponse(result[0:size], safe=False)
