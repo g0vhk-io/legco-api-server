@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from .models import *
+from django.db.models import Count
 from django.db.models import Q
 from rest_framework.views import APIView
 from django.http import HttpResponse, JsonResponse
@@ -9,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from api_server.views import IndividualSerializer
 from haystack.query import SearchQuerySet
 from rest_framework.pagination import LimitOffsetPagination
+from datetime import date
 # Create your views here.
 
 
@@ -171,3 +173,43 @@ class VoteDetailView(APIView):
         vote_serializer = VoteSerializer(vote, many=False)
         vote_summary_serializer = VoteSummarySerializer(summaries, many=True)
         return JsonResponse({'vote': vote_serializer.data, 'individual_votes': serializer.data, 'summaries': vote_summary_serializer.data, 'yes_count': yes_count, 'no_count': no_count, 'abstain_count': abstain_count, 'absent_count': absent_count, 'overall_result': overall_result, 'present_vote_count': present_vote_count, 'id': key}, safe=False)
+
+
+class AbsentView(APIView):
+    renderer_classes = (JSONRenderer, )
+    def get(self, request, from_year=None, to_year=None, format=None):
+        size = int(request.query_params.get("size", 5))
+        query = MeetingHansard.objects.all()
+        if from_year is not None:
+            from_year = int(from_year)
+        print(request.query_params)
+        if "from" in request.query_params and "to" in request.query_params:
+            from_year = int(request.query_params["from"])
+            to_year = int(request.query_params["to"])
+            if from_year >= to_year:
+                from_year = None
+                to_year = None
+
+        today = date.today()
+        if from_year is None:
+            from_year = int(today.year / 4) * 4
+        if to_year is None:
+            to_year = from_year + 4
+        condition = Q(pk__isnull=True)
+        for year in range(from_year, to_year):
+            condition = condition | (Q(date__gt=date(year, 9, 10)) & Q(date__lte=date(year + 1, 9, 9)))
+        query = query.filter(condition)
+        meeting_total = query.count()
+        absent_total =  query.all() \
+        .values('members_absent__individual__pk', 'members_absent__individual__name_ch', 'members_absent__individual__image') \
+        .annotate(dcount=Count('members_absent__individual__pk')).order_by('-dcount')
+        result = []
+        for d in absent_total:
+            pk = d['members_absent__individual__pk']
+            name_ch = d['members_absent__individual__name_ch']
+            image = d['members_absent__individual__image']
+            dcount = d['dcount']
+            if pk is None:
+                continue
+            result.append({'id': pk, 'name': name_ch, 'total': dcount, 'image': image, 'max': meeting_total})
+        return JsonResponse(result[0:size], safe=False)
