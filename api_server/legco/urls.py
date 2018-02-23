@@ -11,4 +11,5 @@ urlpatterns = [
   url(r'^hansards/(?P<year>[0-9]+)/$', MeetingHansardsView.as_view(), name='hansards_in_a_year'),
   url(r'^absent_rank/$', AbsentView.as_view(), name='absent'),
   url(r'^speak_rank/$', SpeakView.as_view(), name='speak'),
+  url(r'^important_motion/$', ImportantMotionView.as_view(), name='important_motion'),
 ]

@@ -244,3 +244,14 @@ class SpeakView(APIView):
             image = d['individual__image']
             result.append({'id': pk, 'name': name_ch, 'total': dcount, 'max': m, 'image': image})
         return JsonResponse(result[0:size], safe=False)
+
+class ImportantMotionView(APIView):
+    renderer_classes = (JSONRenderer, )
+    def get(self, request, format=None):
+        data = []
+        motions = ImportantMotion.objects.select_related('motion').values_list('motion__name_ch', 'motion__vote__date', 'motion__vote__pk').order_by('-motion__vote__date')
+        summaries = VoteSummary.objects.filter(Q(vote__pk__in = [m[2] for m in motions]) & Q(summary_type = VoteSummary.OVERALL))
+        result_dict = {s.vote_id: s.result for s in summaries}
+        for motion in motions:
+            data.append({'title_ch': motion[0], 'date': motion[1], 'id': motion[2], 'result': result_dict[motion[2]]})
+        return JsonResponse({'data':data}, safe=False)
