@@ -12,4 +12,6 @@ urlpatterns = [
   url(r'^absent_rank/$', AbsentView.as_view(), name='absent'),
   url(r'^speak_rank/$', SpeakView.as_view(), name='speak'),
   url(r'^important_motion/$', ImportantMotionView.as_view(), name='important_motion'),
+  url(r'^question_search/(?P<keyword>.+)/$', QuestionSearchView.as_view(), name='question_by_keyword'),
+  url(r'^question/(?P<key>.+)/$', QuestionView.as_view(), name='question'),
 ]

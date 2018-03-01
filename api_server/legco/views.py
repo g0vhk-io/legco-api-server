@@ -69,7 +69,11 @@ class MeetingHansardDetailSerializer(serializers.ModelSerializer):
         model = MeetingHansard
         fields = '__all__'
 
-
+class QuestionSerializer(serializers.ModelSerializer):
+    individual = IndividualSerializer(read_only=True, many=False)
+    class Meta:
+        model = Question
+        fields = '__all__'
 
 class MeetingHansardsView(APIView):
     renderer_classes = (JSONRenderer, )
@@ -255,3 +259,30 @@ class ImportantMotionView(APIView):
         for motion in motions:
             data.append({'title_ch': motion[0], 'date': motion[1], 'id': motion[2], 'result': result_dict[motion[2]]})
         return JsonResponse({'data':data}, safe=False)
+
+
+class QuestionSearchView(APIView):
+    renderer_classes = (JSONRenderer, )
+
+    def get(self, request, keyword=None, format=None):
+        if keyword is not None:
+            words = keyword.split(' ')
+            result = SearchQuerySet()
+            for word in words:
+                print(word)
+                result = result.filter(content__exact=word)
+            result = result.models(Question)
+            result = result.order_by('-year')
+        paginator = LimitOffsetPagination()
+        result = paginator.paginate_queryset(result, request)
+        result = [r.object for r in result]
+        serializer = QuestionSerializer(result, many=True)
+        return paginator.get_paginated_response(serializer.data)
+
+class QuestionView(APIView):
+    renderer_classes = (JSONRenderer, )
+    def get(self, request, key=None, format=None):
+        question = get_object_or_404(Question.objects, key=key)
+        serializer = QuestionSerializer(question, many=False)
+        return JsonResponse(serializer.data, safe=False)
+

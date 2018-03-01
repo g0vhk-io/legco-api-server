@@ -1,6 +1,6 @@
 import datetime
 from haystack import indexes
-from .models import Party, MeetingSpeech
+from .models import Party, MeetingSpeech, Question
 
 
 class PartyIndex(indexes.SearchIndex, indexes.Indexable):
@@ -24,3 +24,17 @@ class SpeechIndex(indexes.SearchIndex, indexes.Indexable):
 
     def index_queryset(self, using=None):
         return self.get_model().objects.filter().prefetch_related('hansard')
+
+
+class QuestionIndex(indexes.SearchIndex, indexes.Indexable):
+    text = indexes.CharField(document=True, use_template=True)
+    name_ch = indexes.CharField(model_attr='title_ch')
+    year = indexes.IntegerField(model_attr='date__year')
+
+    def get_model(self):
+       return Question
+
+    def index_queryset(self, using=None):
+       return self.get_model().objects.filter() 
+
+

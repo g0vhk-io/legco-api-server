@@ -1,0 +1,5 @@
+{{ object.title_ch }}
+{{ object.question }}
+{{ object.answer }}
+{{ object.individual.name_ch}}
+{{ object.date }}

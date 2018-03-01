@@ -110,3 +110,18 @@ class MeetingHansard(models.Model):
     members_absent = models.ManyToManyField(MeetingPersonel, related_name='absent')
     public_officers = models.ManyToManyField(MeetingPersonel, related_name='officers')
     clerks = models.ManyToManyField(MeetingPersonel, related_name='clerks')
+
+class Question(models.Model):
+    individual = models.ForeignKey(Individual)
+    key = models.CharField(max_length=100, primary_key=True)
+    date = models.DateField()
+    question_type = models.CharField(max_length=255)
+    link = models.CharField(max_length=1024, default="")
+    question = models.TextField(max_length=33554432, default="")
+    answer = models.TextField(max_length=33554432, default="")
+    responder = models.CharField(max_length=255)
+    question_type = models.CharField(max_length=512)
+    title_ch = models.CharField(max_length=512, default="")
+    keywords = models.ManyToManyField(Keyword)
+    def __str__(self):
+        return self.date.strftime("%Y-%m-%d") + self.individual.name_ch + self.title_ch

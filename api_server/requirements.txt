@@ -7,3 +7,5 @@ mysqlclient==1.3.12
 pysolr==3.7.0
 django-cors-headers==1.2.0
 django-letsencrypt==3.0.0
+python-dateutil==2.6.1
+w3lib==1.19.0
