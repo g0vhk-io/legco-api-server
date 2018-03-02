@@ -9,3 +9,4 @@ django-cors-headers==1.2.0
 django-letsencrypt==3.0.0
 python-dateutil==2.6.1
 w3lib==1.19.0
+jieba==0.39

@@ -69,8 +69,14 @@ class MeetingHansardDetailSerializer(serializers.ModelSerializer):
         model = MeetingHansard
         fields = '__all__'
 
+class KeywordSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Keyword
+        fields = ['keyword']
+
 class QuestionSerializer(serializers.ModelSerializer):
     individual = IndividualSerializer(read_only=True, many=False)
+    keywords = KeywordSerializer(read_only=True, many=True)
     class Meta:
         model = Question
         fields = '__all__'
