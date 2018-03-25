@@ -3,6 +3,7 @@ from django.db import transaction
 from django.db import IntegrityError
 from django.core.management.base import BaseCommand, CommandError
 from django.core.exceptions import ObjectDoesNotExist
+from legco.models import Keyword
 from legco.models import Meeting, Vote, Motion, Individual, IndividualVote, VoteSummary, Party, MeetingHansard, MeetingSpeech, MeetingPersonel
 from dateutil.parser import *
 import os
@@ -17,6 +18,9 @@ import re
 import sys
 import json
 from datetime import date, datetime
+from collections import Counter
+from textrank4zh import TextRank4Keyword, TextRank4Sentence
+
 
 class Command(BaseCommand):
     help = 'Load hansard JSON into database'
@@ -31,7 +35,8 @@ class Command(BaseCommand):
                        hansard.speeches,
                        hansard.members_absent,
                        hansard.public_officers,
-                       hansard.clerks]
+                       hansard.clerks,
+                       hansard.keywords]
             for q in queries:
                 for o in q.all():
                     o.delete()
@@ -110,7 +115,19 @@ class Command(BaseCommand):
                 hansard.public_officers.add(p)
             for c in clerks:
                 hansard.clerks.add(c)
+
+            all_s = ""
             for s in speeches:
+                all_s += s.text_ch + "\n"
                 hansard.speeches.add(s)
-            print("New hansard ID=%d" % hansard.id)
+            #print("Calculating keyword")
+            #tr4w = TextRank4Keyword(allow_speech_tags=["nr", "ns", "nz", "nt"])
+            #tr4w.analyze(text=all_s, lower=True, window=3)
+            #for item in tr4w.get_keywords(20, word_min_len=3):
+            #    keyword = item.word
+            #    m, created = Keyword.objects.get_or_create(keyword = keyword)
+            #    m.keyword = keyword
+            #    print(keyword)
+            #    hansard.keywords.add(m)
+            #print("New hansard ID=%d" % hansard.id)
             hansard.save()
