@@ -27,7 +27,7 @@ services:
         - MYSQL_USER=docker
         - MYSQL_PASSWORD=docker
         - MYSQL_HOST=db
-        - SOLR_URL=http://solr:8983/solr
+        - SOLR_URL=http://solr:8983/solr/mycore
     ports:
       - "9000:8080"
     links:

@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:3.6-jessie
 RUN mkdir /app
 RUN mkdir /app/static
 WORKDIR /app
