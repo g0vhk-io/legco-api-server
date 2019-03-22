@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'news',
     'haystack',
     'corsheaders',
-    'letsencrypt'
+    'letsencrypt',
+    'rest_framework.authtoken'
 ]
 
 REST_FRAMEWORK = {
@@ -108,7 +109,7 @@ DATABASES = {
     }
 }
 
-
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
 HAYSTACK_CONNECTIONS = {
     'default': {
         'URL': os.getenv('SOLR_URL'),

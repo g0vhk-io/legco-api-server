@@ -1,5 +1,4 @@
 from django.shortcuts import render
-from .models import *
 from django.db.models import Count
 from django.db.models import Q
 from rest_framework.views import APIView
@@ -11,7 +10,11 @@ from api_server.views import IndividualSerializer
 from haystack.query import SearchQuerySet
 from rest_framework.pagination import LimitOffsetPagination
 from datetime import date
-# Create your views here.
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from .models import *
+from .hansard import *
 
 
 class VoteSummarySerializer(serializers.ModelSerializer):
@@ -110,6 +113,7 @@ class MeetingHansardsView(APIView):
             meeting['absent_count'] = absent_counts[meeting['id']]
         return JsonResponse(output, safe=False)
 
+
 class MeetingHansardView(APIView):
     renderer_classes = (JSONRenderer, )
 
@@ -119,6 +123,18 @@ class MeetingHansardView(APIView):
 
         serializer = MeetingHansardDetailSerializer(meeting, many=False)
         return JsonResponse(serializer.data, safe=False)
+
+
+class MeetingHansardUpsertView(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+
+    def put(self, request):
+        hansard,  created = upsert_hansard_json_into_db(request.data)
+        output = {'created': created}
+        return JsonResponse(output, safe=False)
+
 
 class MeetingSpeechSearchView(APIView):
     renderer_classes = (JSONRenderer, )
@@ -291,4 +307,5 @@ class QuestionView(APIView):
         question = get_object_or_404(Question.objects, key=key)
         serializer = QuestionSerializer(question, many=False)
         return JsonResponse(serializer.data, safe=False)
+
 
