@@ -3,7 +3,7 @@ from datetime import datetime
 
 class Keyword(models.Model):
     keyword = models.CharField(max_length=128, unique=True)
-    def __unicode__(self):
+    def __str__(self):
         return self.keyword
 
 class Party(models.Model):
@@ -11,7 +11,7 @@ class Party(models.Model):
     name_ch = models.CharField(max_length=512)
     image = models.CharField(max_length=512, blank=True, null=True, default=None)
     keywords = models.CharField(max_length=512, blank=True, null=True, default=None)
-    def __unicode__(self):
+    def __str__(self):
         return self.name_en + "-" + self.name_ch
 
 class Individual(models.Model):
@@ -19,7 +19,7 @@ class Individual(models.Model):
     name_ch = models.CharField(max_length=512)
     party = models.ForeignKey(Party, null=True, blank=True, on_delete=models.CASCADE)
     image = models.CharField(max_length=512, blank=True, null=True, default=None)
-    def __unicode__(self):
+    def __str__(self):
         return self.name_en + "-" + self.name_ch
 
 class Motion(models.Model):
