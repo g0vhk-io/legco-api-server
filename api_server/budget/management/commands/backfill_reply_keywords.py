@@ -22,14 +22,10 @@ class Command(BaseCommand):
         for reply in replies:
             reply.keywords = []
             keywords = ke.get_keywords(reply.question + "\n" + reply.answer)
-            print(",".join(keywords))
+            print(reply.key + ",".join(keywords))
             for keyword in keywords:
                 m, created = Keyword.objects.get_or_create(keyword = keyword)
                 m.keyword = keyword
                 reply.keywords.add(m)
                 m.save()
             reply.save()
-
-
-
-
