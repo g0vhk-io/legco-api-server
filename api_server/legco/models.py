@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import datetime
 
+
 class Keyword(models.Model):
     keyword = models.CharField(max_length=128, unique=True)
     def __str__(self):
@@ -126,3 +127,34 @@ class Question(models.Model):
     keywords = models.ManyToManyField(Keyword)
     def __str__(self):
         return self.date.strftime("%Y-%m-%d") + self.individual.name_ch + self.title_ch
+
+class CouncilMembershipType(models.Model):
+    GC = 'GC'
+    FC_DC = 'FC_DC'
+    FC = 'FC'
+    CATEGORY_CHOICES = (
+        (GC, 'Geographical Constituencies'),
+        (FC_DC, 'Functional Constituency District Council (Second)'),
+        (FC, 'Functional Constituency')
+    )
+    category = models.CharField(max_length=128, choices=CATEGORY_CHOICES)
+    sub_category = models.CharField(max_length=128)
+    def __str__(self):
+        return self.category + "-" + self.sub_category
+
+class Council(models.Model):
+    name_en = models.CharField(max_length=512)
+    name_ch = models.CharField(max_length=512)
+    start_year = models.IntegerField(default=0)
+    individuals = models.ManyToManyField(Individual)
+    members = models.ManyToManyField(Individual, through='CouncilMember', related_name='member')
+    chairman = models.ForeignKey(Individual, related_name='chair', null=True, blank=True, on_delete=models.DO_NOTHING)
+    def __str__(self):
+        return self.name_en + "-" + self.name_ch
+
+class CouncilMember(models.Model):
+    member = models.ForeignKey(Individual, on_delete=models.DO_NOTHING)
+    council = models.ForeignKey(Council, on_delete=models.DO_NOTHING)
+    membership_type = models.ForeignKey(CouncilMembershipType, on_delete=models.DO_NOTHING)
+    def __str__(self):
+        return self.member.name_ch + "-" + self.council.name_ch + "-" + unicode(self.membership_type) 
