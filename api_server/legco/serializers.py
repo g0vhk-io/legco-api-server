@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from legco.models import Meeting, Vote, Motion, Individual, IndividualVote, VoteSummary, MeetingPersonel, MeetingSpeech, MeetingHansard, Keyword
-from legco.models import Question
+from legco.models import Question, CouncilMembershipType, Council, CouncilMember
 from api_server.views import IndividualSerializer
 
 
@@ -80,4 +80,23 @@ class QuestionSerializer(serializers.ModelSerializer):
         model = Question
         fields = '__all__'
 
+class CouncilMembershipTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CouncilMembershipType
+        fields = '__all__'
+
+class CouncilMemberSerializer(serializers.ModelSerializer):
+    member = IndividualSerializer(read_only=True, many=False)
+    membership_type = CouncilMembershipTypeSerializer(read_only=True, many=False)
+    class Meta:
+        model = CouncilMember
+        fields = ['member', 'membership_type']
+
+
+class CouncilSerializer(serializers.ModelSerializer):
+    members = IndividualSerializer(many=True, read_only=True)
+    chairman = IndividualSerializer(read_only=True, many=False)
+    class Meta:
+        model = Council
+        fields = ['name_en', 'name_ch', 'start_year', 'members', 'chairman']
 

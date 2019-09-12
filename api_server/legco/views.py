@@ -368,3 +368,11 @@ class QuestionView(APIView):
         question = get_object_or_404(Question.objects, key=key)
         serializer = QuestionSerializer(question, many=False)
         return JsonResponse(serializer.data, safe=False)
+
+class CouncilView(APIView):
+    renderer_classes = (JSONRenderer, )
+
+    def get(self, request, key=None, format=None):
+        councils = list(Council.objects.all())
+        serializer = CouncilSerializer(councils, many=True)
+        return JsonResponse(serializer.data, safe=False)

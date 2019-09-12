@@ -22,4 +22,5 @@ urlpatterns = [
   url(r'^question_search/(?P<keyword>.+)/$', QuestionSearchView.as_view(), name='question_by_keyword'),
   url(r'^question/(?P<key>.+)/$', QuestionView.as_view(), name='question'),
   url(r'^upsert_vote/$', MeetingVoteUpsertView.as_view(), name='vote_upsert'),
+  url(r'^councils/$', CouncilView.as_view(), name='councils'),
 ]
