@@ -15,7 +15,7 @@ urlpatterns = [
   url(r'^hansards/(?P<year>[0-9]+)/$', MeetingHansardsView.as_view(), name='hansards_in_a_year'),
   url(r'^present_count/(?P<key>[0-9]+)$', PresentCountView.as_view(), name='present'),
   url(r'^present_count/$', PresentCountView.as_view(), name='present'),
-  url(r'^vote_count/(?P<key>[0-9]+)$', VoteCountView.as_view(), name='vote_count'),
+  url(r'^individual/(?P<key>[0-9]+)$', IndividualView.as_view(), name='individual'),
   url(r'^absent_rank/$', AbsentView.as_view(), name='absent'),
   url(r'^speak_rank/$', SpeakView.as_view(), name='speak'),
   url(r'^important_motion/$', ImportantMotionView.as_view(), name='important_motion'),
@@ -23,4 +23,5 @@ urlpatterns = [
   url(r'^question/(?P<key>.+)/$', QuestionView.as_view(), name='question'),
   url(r'^upsert_vote/$', MeetingVoteUpsertView.as_view(), name='vote_upsert'),
   url(r'^councils/$', CouncilView.as_view(), name='councils'),
+  url(r'^council/(?P<year>[0-9]+)/(?P<member_type>[A-z]+)$', CouncilByYearAndTypeView.as_view(), name='council_by_year_type'),
 ]
