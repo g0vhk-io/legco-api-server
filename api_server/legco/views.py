@@ -12,9 +12,56 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from legco.models import Meeting, Vote, Motion, Individual, IndividualVote, VoteSummary
+from django.db.models import Q
 from .models import *
 from .hansard import *
 from .serializers import *
+
+
+def get_present_count_by_key(from_year=None, to_year=None, key=None):
+    if key is not None:
+         query = MeetingHansard.objects.filter(
+             (Q(members_present__individual__pk=key)))
+    else:
+         query = MeetingHansard.objects.all()
+    from_year = None
+    to_year = None
+    if from_year is not None and to_year is not None:
+        from_year = int(from_year)
+        to_year = int(to_year)
+        if from_year >= to_year:
+            from_year = None
+            to_year = None
+
+    today = date.today()
+    if from_year is None:
+        from_year = today.year // 4 * 4
+    if to_year is None:
+        to_year = from_year + 4
+    condition = Q(pk__isnull=True)
+    for year in range(from_year, to_year):
+        condition = condition | (Q(date__gt=date(year, 9, 10)) & Q(
+            date__lte=date(year + 1, 9, 9)))
+    query = query.filter(condition)
+    meeting_total = query.count()
+    present_total = query.all() \
+        .values('members_present__individual__pk', 'members_present__individual__name_ch', 'members_present__individual__image') \
+        .annotate(dcount=Count('members_present__individual__pk')).order_by('members_present__individual__pk')
+    result = []
+    for d in present_total:
+        pk = d['members_present__individual__pk']
+        name_ch = d['members_present__individual__name_ch']
+        image = d['members_present__individual__image']
+        dcount = d['dcount']
+        if pk is None:
+            continue
+        result.append({'id': pk, 'name': name_ch, 'total': dcount,
+                       'image': image, 'max': meeting_total})
+
+    if key is not None:
+        result = result[0]  # Fine to return error if there is None
+    return result
+
 
 
 class MeetingHansardsView(APIView):
@@ -212,52 +259,13 @@ class PresentCountView(APIView):
     renderer_classes = (JSONRenderer, )
 
     def get(self, request, key=None, format=None):
-        if key is not None:
-            query = MeetingHansard.objects.filter(
-                (Q(members_present__individual__pk=key)))
-        else:
-            query = MeetingHansard.objects.all()
-        from_year = None
-        to_year = None
-        if 'from' in request.query_params and 'to' in request.query_params:
-            from_year = int(request.query_params['from'])
-            to_year = int(request.query_params['to'])
-            if from_year >= to_year:
-                from_year = None
-                to_year = None
-
-        today = date.today()
-        if from_year is None:
-            from_year = today.year // 4 * 4
-        if to_year is None:
-            to_year = from_year + 4
-        condition = Q(pk__isnull=True)
-        for year in range(from_year, to_year):
-            condition = condition | (Q(date__gt=date(year, 9, 10)) & Q(
-                date__lte=date(year + 1, 9, 9)))
-        query = query.filter(condition)
-        meeting_total = query.count()
-        present_total = query.all() \
-            .values('members_present__individual__pk', 'members_present__individual__name_ch', 'members_present__individual__image') \
-            .annotate(dcount=Count('members_present__individual__pk')).order_by('members_present__individual__pk')
-        result = []
-        for d in present_total:
-            pk = d['members_present__individual__pk']
-            name_ch = d['members_present__individual__name_ch']
-            image = d['members_present__individual__image']
-            dcount = d['dcount']
-            if pk is None:
-                continue
-            result.append({'id': pk, 'name': name_ch, 'total': dcount,
-                           'image': image, 'max': meeting_total})
-
-        if key is not None:
-            result = result[0]  # Fine to return error if there is None
-
-        return JsonResponse(result, safe=False)
+         from_year = request.query_params.get('from', None)
+         to_year = request.query_params.get('to', None)
+         result = get_present_count_by_key(from_year, to_year, key)
+         return JsonResponse(result, safe=False)
 
 
-class VoteCountView(APIView):
+class IndividualView(APIView):
     renderer_classes = (JSONRenderer, )
 
     def get(self, request, key=None, format=None):
@@ -286,7 +294,11 @@ class VoteCountView(APIView):
         result = {}
         for voteCount in voteCounts:
             result[voteCount['result'].lower()] = voteCount['dcount']
-        return JsonResponse(result, safe=False)
+        individual = Individual.objects.get(pk=key)
+        serializer = IndividualSerializer(individual, many=False)
+        data = serializer.data
+        data.update(result)
+        return JsonResponse(data, safe=False)
 
 
 class SpeakView(APIView):
@@ -375,4 +387,34 @@ class CouncilView(APIView):
     def get(self, request, key=None, format=None):
         councils = list(Council.objects.all())
         serializer = CouncilSerializer(councils, many=True)
+        return JsonResponse(serializer.data, safe=False)
+
+
+class CouncilByYearAndTypeView(APIView):
+    renderer_classes = (JSONRenderer, )
+
+    def get(self, request, year, member_type, format=None):
+        year = int(year)
+        member_types = [5] + list(range(7,35))
+        if member_type == 'KLE':
+            member_types = [1]
+        if member_type == 'NTW':
+            member_types = [2]
+        if member_type == 'ISLAND':
+            member_type = [3]
+        if member_type == 'KLW':
+            member_type = [4]
+        if member_type == 'NTE':
+            member_type = [6]
+        members = list(CouncilMember.objects.filter(Q(council__start_year=int(year)) & Q(membership_type__pk__in=member_types)))
+        presents = {x['id']: {'total':x['total'], 'max': x['max']} for x in  get_present_count_by_key(from_year=year,to_year=year + 4)}
+        for member in members:
+            pk = member.id
+            if pk in presents:
+               member.total_present = presents[pk]['total']
+               member.max_present = presents[pk]['max']
+            else:
+               member.total_present = 0
+               member.max_present = 0
+        serializer = CouncilMemberSerializer(members, many=True)
         return JsonResponse(serializer.data, safe=False)
