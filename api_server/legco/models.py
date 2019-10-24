@@ -12,6 +12,8 @@ class Party(models.Model):
     name_ch = models.CharField(max_length=512)
     image = models.CharField(max_length=512, blank=True, null=True, default=None)
     keywords = models.CharField(max_length=512, blank=True, null=True, default=None)
+    name_short_en = models.CharField(max_length=512, default='')
+    name_short_ch = models.CharField(max_length=512, default='')
     def __str__(self):
         return self.name_en + "-" + self.name_ch
 
