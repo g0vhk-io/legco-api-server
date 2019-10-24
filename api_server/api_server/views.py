@@ -10,7 +10,7 @@ from rest_framework import serializers
 class PartySerializer(serializers.ModelSerializer):
     class Meta:
         model = Party
-        fields = ('name_ch', 'name_en', 'id')
+        fields = ('name_ch', 'name_en', 'id', 'image', 'name_short_en', 'name_short_ch')
 
 class IndividualSerializer(serializers.ModelSerializer):
     party = PartySerializer(many=False, read_only=True)
