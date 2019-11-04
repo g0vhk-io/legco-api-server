@@ -24,4 +24,5 @@ urlpatterns = [
   url(r'^upsert_vote/$', MeetingVoteUpsertView.as_view(), name='vote_upsert'),
   url(r'^councils/$', CouncilView.as_view(), name='councils'),
   url(r'^council/(?P<year>[0-9]+)/(?P<member_type>[A-z]+)$', CouncilByYearAndTypeView.as_view(), name='council_by_year_type'),
+  url(r'^stat/(?P<model>[A-z]+)$', StatView.as_view(), name='stat'),
 ]

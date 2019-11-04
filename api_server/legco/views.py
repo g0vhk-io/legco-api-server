@@ -1,10 +1,11 @@
 from django.shortcuts import render
-from django.db.models import Count
+from django.db.models import Count, Min, Max
 from django.db.models import Q
 from rest_framework.views import APIView
 from django.http import HttpResponse, JsonResponse
 from rest_framework.renderers import JSONRenderer
 from django.shortcuts import get_object_or_404
+from django.http import HttpResponseNotFound
 from haystack.query import SearchQuerySet
 from rest_framework.pagination import LimitOffsetPagination
 from datetime import date
@@ -13,6 +14,7 @@ from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from legco.models import Meeting, Vote, Motion, Individual, IndividualVote, VoteSummary
 from django.db.models import Q
+from django.db.models.functions import ExtractMonth, ExtractYear
 from .models import *
 from .hansard import *
 from .serializers import *
@@ -418,3 +420,24 @@ class CouncilByYearAndTypeView(APIView):
                member.max_present = 0
         serializer = CouncilMemberSerializer(members, many=True)
         return JsonResponse(serializer.data, safe=False)
+
+
+class StatView(APIView):
+    renderer_classes = (JSONRenderer, )
+
+    def get(self, request, model, format=None):
+        model = model.lower()
+        model_mapping = {'hansard': MeetingHansard, 'question': Question, 'vote': Vote, 'meeting': Meeting}
+        key_mapping = {'hansard': 'id', 'question': 'key', 'vote': 'id', 'meeting': 'id'}
+        model_class_name = model_mapping.get(model, None)
+        pk_field = key_mapping.get(model, None)
+        if model_class_name is None:
+            return HttpResponseNotFound('%s not supported.' % model)
+        stat_by_month = model_class_name.objects.annotate(month=ExtractMonth('date'), year=ExtractYear('date'))
+        stat_by_month = stat_by_month.values('year', 'month').annotate(total=Count(pk_field)).order_by('year', 'month')
+
+        stat_by_month = [l for l in stat_by_month]
+        min_max = model_class_name.objects.all().aggregate(min_date=Min('date'), max_date=Max('date'))
+        min_date = min_max['min_date']
+        max_date = min_max['max_date']
+        return JsonResponse({'month_level': stat_by_month, 'latest': max_date, 'earliest': min_date}, safe=False)
