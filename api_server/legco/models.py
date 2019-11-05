@@ -160,3 +160,11 @@ class CouncilMember(models.Model):
     membership_type = models.ForeignKey(CouncilMembershipType, on_delete=models.DO_NOTHING)
     def __str__(self):
         return self.member.name_ch + "-" + self.council.name_ch + "-" + unicode(self.membership_type) 
+
+
+class EventLog(models.Model):
+    date = models.DateTimeField(default=datetime.now(), editable=False)
+    message = models.CharField(max_length=512)
+    model_class_name = models.CharField(max_length=512)
+    model_key = models.CharField(max_length=512)
+    

@@ -17,6 +17,7 @@ from django.db.models import Q
 from django.db.models.functions import ExtractMonth, ExtractYear
 from .models import *
 from .hansard import *
+from .question import *
 from .serializers import *
 
 
@@ -117,6 +118,16 @@ class MeetingHansardUpsertView(APIView):
     def put(self, request):
         hansard,  created = upsert_hansard_json_into_db(request.data)
         output = {'created': created}
+        return JsonResponse(output, safe=False)
+
+
+class QuestionUpsertView(APIView):
+    authentication_classes = (TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def put(self, request):
+        question,  created = upsert_question_json_into_db(request.data)
+        output = {'created': created, 'key': None if question is None else question.pk}
         return JsonResponse(output, safe=False)
 
 
