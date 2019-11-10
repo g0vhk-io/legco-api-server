@@ -26,8 +26,8 @@ class Individual(models.Model):
         return self.name_en + "-" + self.name_ch
 
 class Motion(models.Model):
-    name_en = models.CharField(max_length=512)
-    name_ch = models.CharField(max_length=512)
+    name_en = models.CharField(max_length=2048)
+    name_ch = models.CharField(max_length=2048)
     mover_type = models.CharField(max_length=512)
     mover_ch = models.CharField(max_length=512, default=None, null=True)
     mover_en = models.CharField(max_length=512, default=None, null=True)
