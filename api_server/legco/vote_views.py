@@ -26,7 +26,7 @@ class MeetingVoteUpsertView(APIView):
                            'individual_votes': IndividualVoteSerializer(q['individual_votes'], many=True).data}
                            for q in r['votes']
                          ] ,
-                'is_created': r['is_created']} for r in results]
+                'created': r['is_created']} for r in results]
             return JsonResponse(results, safe=False)
         except Exception as e:
             tb.print_exc()
