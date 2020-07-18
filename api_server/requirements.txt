@@ -1,4 +1,4 @@
-django==2.1.7
+django==2.2.13
 setuptools==38.4.0
 django-rest-framework
 django-haystack==2.8.1
