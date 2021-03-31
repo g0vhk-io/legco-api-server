@@ -10,6 +10,6 @@ django-letsencrypt==3.0.0
 python-dateutil==2.6.1
 w3lib==1.19.0
 jieba==0.39
-lxml==4.1.1
+lxml==4.6.3
 textrank4zh==0.3
 uWSGI==2.0.18
