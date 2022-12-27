@@ -1,5 +1,5 @@
 django==2.1.7
-setuptools==38.4.0
+setuptools==65.5.1
 django-rest-framework
 django-haystack==2.8.1
 wheel==0.30.0
